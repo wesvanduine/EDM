@@ -5,10 +5,10 @@ var config = {
     projectId: "coding-bootcamp-ec664",
     storageBucket: "coding-bootcamp-ec664.appspot.com",
     messagingSenderId: "521194709538"
-  };
+};
 
-  firebase.initializeApp(config);
-  var database = firebase.database();
+firebase.initializeApp(config);
+var database = firebase.database();
 
 $("#submit-button").on("click", function(event) {
 
@@ -17,7 +17,14 @@ $("#submit-button").on("click", function(event) {
   var employeeName = $("#employee-nameForm").val().trim();
   var employeeRole = $("#employee-roleForm").val().trim();
   var employeeStart = $("#employee-startForm").val().trim();
+  var employeeMonths = moment().diff(moment(employeeStart), "months");
   var employeeRate = $("#employee-rateForm").val().trim();
+  var totalBilled = employeeMonths * employeeRate;
+
+  $("#employee-nameForm").val('');
+  $("#employee-roleForm").val('');
+  $("#employee-startForm").val('');
+  $("#employee-rateForm").val('');
 
   database.ref().push({
         name: employeeName,
@@ -26,16 +33,18 @@ $("#submit-button").on("click", function(event) {
         rate: employeeRate
   });
 
-
-
   var newRow = $("<tr>");
-  newRow.html("<td>"+employeeName+"</td>"+"<td>"+employeeRole+"</td>"+"<td>"+employeeStart+"</td>"+"<td>"+"</td>"+"<td>"+employeeRate+"</td>"+"</td>"+"<td>");
+  newRow.html("<td>"+employeeName+"</td>"+"<td>"+employeeRole+"</td>"+"<td>"+employeeStart+"</td>"+"<td>"+employeeMonths+"</td>"+"<td>"+employeeRate+"</td>"+"<td>"+totalBilled+"</td>");
 
   $("#table-body").prepend(newRow);
 
-  $("#employee-nameForm").val('');
-  $("#employee-roleForm").val('');
-  $("#employee-startForm").val('');
-  $("#employee-rateForm").val('');
-
 }); // End of submit-button on click event
+
+// database.ref().on("child_added", function(snapshot) {
+
+//   var employeeName = snapshot.val().name;
+//   var employeeName = snapshot.val().role;
+//   var employeeName = snapshot.val().start;
+//   var employeeName = snapshot.val().rate;
+
+// }); //End of .on child-added listener
